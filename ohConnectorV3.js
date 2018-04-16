@@ -138,6 +138,8 @@ function handleAuthorization() {
       payload: {}
     }
   };
+  context.succeed(result);
+}
 
 /**
  * Answers a "ReportState" request.  Returns the state(s) of an endpoint
