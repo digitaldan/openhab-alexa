@@ -204,6 +204,50 @@ AlexaContextProperties.prototype.speakerVolumeStateProperty = function (state) {
 }
 
 /**
+ * Returns a property response for Burglary Alarm endpoints
+ * @param {string} state
+ */
+AlexaContextProperties.prototype.burglaryAlarmStateProperty = function (state) {
+  var alarm = state === "ON" ? "ALARM" : "OK"
+  return this.generateProperty('Alexa.SecurityPanelController', 'burglaryAlarm', alarm);
+}
+
+/**
+ * Returns a property response for Fire Alarm endpoints
+ * @param {string} state
+ */
+AlexaContextProperties.prototype.fireAlarmStateProperty = function (state) {
+  var alarm = state === "ON" ? "ALARM" : "OK"
+  return this.generateProperty('Alexa.SecurityPanelController', 'fireAlarm', alarm);
+}
+
+/**
+ * Returns a property response for Carbon Monoxide Alarm endpoints
+ * @param {string} state
+ */
+AlexaContextProperties.prototype.carbonMonoxideAlarmStateProperty = function (state) {
+  var alarm = state === "ON" ? "ALARM" : "OK"
+  return this.generateProperty('Alexa.SecurityPanelController', 'carbonMonoxideAlarm', alarm);
+}
+
+/**
+ * Returns a property response for Water Alarm endpoints
+ * @param {string} state
+ */
+AlexaContextProperties.prototype.waterAlarmStateProperty = function (state) {
+  var alarm = state === "ON" ? "ALARM" : "OK"
+  return this.generateProperty('Alexa.SecurityPanelController', 'waterAlarm', alarm);
+}
+
+/**
+ * Returns a property response for Arm State endpoints
+ * @param {string} state
+ */
+AlexaContextProperties.prototype.armStateProperty = function (state) {
+  return this.generateProperty('Alexa.SecurityPanelController', 'armState', state);
+}
+
+/**
  * Returns a property response for health endpoints
  */
 AlexaContextProperties.prototype.endpointHealthProperty = function () {
@@ -357,6 +401,39 @@ AlexaContextProperties.prototype.propertiesResponseForItems = function (items, p
           item = itemByName(group.volume.itemName);
           if(item){
             properties.push(self.speakerVolumeStateProperty(item.state));
+          }
+        }
+        break;
+        case "SecurityPanelController":
+        if (group.burglaryAlarm) {
+          item = itemByName(group.burglaryAlarm.itemName);
+          if (item) {
+            properties.push(self.brightnessStateProperty(item.state));
+          }
+        }
+        if (group.fireAlarm) {
+          item = itemByName(group.fireAlarm.itemName);
+          if (item) {
+            properties.push(self.fireAlarmStateProperty(item.state));
+          }
+        }
+        if (group.waterAlarm) {
+          item = itemByName(group.waterAlarm.itemName);
+          if (item) {
+            properties.push(self.waterAlarmStateProperty(item.state));
+          }
+        }
+        if (group.carbonMonoxideAlarm) {
+          item = itemByName(group.carbonMonoxideAlarm.itemName);
+          if (item) {
+            properties.push(self.carbonMonoxideAlarmStateProperty(item.state));
+          }
+        }
+        if (group.armState) {
+          item = itemByName(group.armState.itemName);
+          if (item) {
+            var state = utils.normalizeSecurityMode(item.state, group.armState.parameters);
+            properties.push(self.armStateProperty(state));
           }
         }
         break;

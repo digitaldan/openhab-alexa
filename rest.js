@@ -82,7 +82,11 @@ function getItemOrItems(token, itemName, parameters, success, failure) {
                     failure({
                         message: 'Error response ' + response.statusCode
                     });
+<<<<<<< HEAD
                     log.info('getItem failed for path: ' + options.path +
+=======
+                    logger.info('getItem failed for path: ' + options.path +
+>>>>>>> master
                     ' code: ' + response.statusCode + ' body: ' + body);
                     return;
                 }

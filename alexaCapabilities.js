@@ -188,7 +188,7 @@ AlexaCapabilities.prototype.colorController = function () {
 };
 
 AlexaCapabilities.prototype.colorTemperatureController = function () {
- return {
+  return {
     capabilities: {
       "type": "AlexaInterface",
       "interface": "Alexa.ColorTemperatureController",
@@ -352,6 +352,55 @@ AlexaCapabilities.prototype.playbackController = function () {
   };
 
 };
+
+AlexaCapabilities.prototype.SecurityPanelController = function (supportsPin, supportsArmInstant) {
+  var controller = {
+    "capabilities": [
+      {
+        "type": "AlexaInterface",
+        "interface": "Alexa.SecurityPanelController",
+        "version": "3",
+        "properties": {
+          "supported": [
+            {
+              "name": "armState"
+            },
+            {
+              "name": "burglaryAlarm"
+            }
+          ],
+          "proactivelyReported": false,
+          "retrievable": true
+        },
+        "configuration": {
+          "supportedArmStates": [
+            {
+              "value": "ARMED_AWAY"
+            },
+            {
+              "value": "ARMED_STAY"
+            },
+            {
+              "value": "DISARMED"
+            }
+          ]
+        }
+      }
+    ],
+    category: "SECURITY_PANEL"
+  };
+  if (supportsPin) {
+    controller.capabilities.supportedAuthorizationTypes = [
+      {
+        "type": "FOUR_DIGIT_PIN"
+      }
+    ]
+  }
+  if (supportsArmInstant) {
+    controller.capabilities.supportedAuthorizationTypes.supportsArmInstant = true
+  }
+  return controller;
+}
 
 AlexaCapabilities.prototype.endpointHealth = function () {
   return {

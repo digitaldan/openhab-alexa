@@ -30,28 +30,59 @@ var THERMOSTAT_MODE_MAPPING = {
   default: {AUTO: 'auto', COOL: 'cool', HEAT: 'heat', ECO: 'eco', OFF: 'off'}
 };
 
+var SECURITY_MODE_MAPPING = {
+  default: {ARMED_AWAY:"away",ARMED_STAY:"stay",ARMED_NIGHT:"night",DISARMED:"disarm"}
+}
+
 /**
 * Normilizes thermostat modes based on binding name
 *   Alexa: AUTO, COOL, HEAT, ECO, OFF
 *   OH: depending on thermostat binding or user mappings defined
 **/
 function normalizeThermostatMode(mode, parameters = {}) {
-  var alexaModes = Object.keys(THERMOSTAT_MODE_MAPPING.default);
+  return normalizeMode(THERMOSTAT_MODE_MAPPING,mode, parameters);
+  // var alexaModes = Object.keys(THERMOSTAT_MODE_MAPPING.default);
+  // var bindingName = parameters.binding ? parameters.binding.toLowerCase() : 'default';
+  // var userMap = Object.keys(parameters).reduce(function(map, param) {
+  //   if (alexaModes.includes(param)) map[param] = parameters[param];
+  //   return map;
+  // }, {});
+  // var thermostatModeMap = Object.keys(userMap).length > 0 ? userMap : THERMOSTAT_MODE_MAPPING[bindingName];
+
+  // // Convert Alexa to OH
+  // if (alexaModes.includes(mode)) {
+  //   return thermostatModeMap[mode];
+  // }
+  // // Convert OH to Alexa
+  // else {
+  //   return Object.keys(thermostatModeMap).reduce(function(result, alexaMode) {
+  //     if (typeof(thermostatModeMap[alexaMode]) !== 'undefined' && thermostatModeMap[alexaMode].toString() === mode.toString()) result = alexaMode;
+  //     return result;
+  //   }, undefined);
+  // }
+}
+
+function normalizeSecurityMode(mode, parameters = {}) {
+  return normalizeMode(SECURITY_MODE_MAPPING,mode, parameters);
+}
+
+function normalizeMode(presetModes, mode, parameters = {}) {
+  var alexaModes = Object.keys(presetModes.default);
   var bindingName = parameters.binding ? parameters.binding.toLowerCase() : 'default';
   var userMap = Object.keys(parameters).reduce(function(map, param) {
     if (alexaModes.includes(param)) map[param] = parameters[param];
     return map;
   }, {});
-  var thermostatModeMap = Object.keys(userMap).length > 0 ? userMap : THERMOSTAT_MODE_MAPPING[bindingName];
+  var modeMap = Object.keys(userMap).length > 0 ? userMap : presetModes[bindingName];
 
   // Convert Alexa to OH
   if (alexaModes.includes(mode)) {
-    return thermostatModeMap[mode];
+    return modeMap[mode];
   }
   // Convert OH to Alexa
   else {
-    return Object.keys(thermostatModeMap).reduce(function(result, alexaMode) {
-      if (typeof(thermostatModeMap[alexaMode]) !== 'undefined' && thermostatModeMap[alexaMode].toString() === mode.toString()) result = alexaMode;
+    return Object.keys(modeMap).reduce(function(result, alexaMode) {
+      if (typeof(modeMap[alexaMode]) !== 'undefined' && modeMap[alexaMode].toString() === mode.toString()) result = alexaMode;
       return result;
     }, undefined);
   }
@@ -198,4 +229,5 @@ module.exports.date = date;
 module.exports.metadataToPropertyMap = metadataToPropertyMap;
 module.exports.normalizeColorTemperature = normalizeColorTemperature;
 module.exports.normalizeThermostatMode = normalizeThermostatMode;
+module.exports.normalizeSecurityMode = normalizeSecurityMode;
 module.exports.supportedDisplayCategory = supportedDisplayCategory;
